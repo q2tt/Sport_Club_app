@@ -1,0 +1,9 @@
+.label{
+    color: black;
+    border: 2px solid gray;
+}
+
+.errorLabel{
+    color: red;
+    border: 2px solid rgb(201, 8, 8);
+}
