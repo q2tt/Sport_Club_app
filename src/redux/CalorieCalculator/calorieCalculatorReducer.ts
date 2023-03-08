@@ -1,28 +1,42 @@
+import { SET_VALUES } from "./calorieCalculatorTypes";
+
 
 export type initialStateType = {
-    sex: string | null,
-    weight: null | number,
-    height: null | number
+  age: string,
+  currentWeight: 'pounds' | 'kilos',
+  weight: string,
+  currentHeight: 'feetInches'| 'cm',
+  heightCm: string,
+  heightInches: string,
+  heightFeed: string,
+  sex: 'female'| 'male' ,
+  activity: 'lightly' |'no' | 'very' | 'active' | 'moderately' 
 }
 
-let initialState :initialStateType = {
-    sex: null,
-    weight: null,
-    height: null
+let initialState :initialStateType | any= {
+  age: '',
+  weight: '',
+  currentWeight:  'pounds',
+  currentHeight: 'feetInches',
+  heightCm: '',
+  heightInches: '',
+  heightFeed: '', 
+  sex: 'female', 
+  activity: null
   };
   
-//   const calorieCalculatorReducer = (state = initialState, action) => {
-//     switch (action.type) {
-//         case SET_USERS: {
-//           return { ...state, users: action.users };
-//         }
-//         case SET_USER: {
-//           return { ...state, user: action.user};
-//         }
-//         default:
-//           return state;
-//       }
+  const calorieCalculatorReducer = (state = initialState, action: any) => {
+    switch (action.type) {
+        case SET_VALUES: {
+          console.log(action) 
+          console.log(state) 
+          return { ...state, state : action.payload};
+        }
+  
+        default:
+          return state;
+      }
      
     
-//   };
- // export default calorieCalculatorReducer;
+  };
+ export default calorieCalculatorReducer;

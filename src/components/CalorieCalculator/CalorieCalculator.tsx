@@ -1,89 +1,142 @@
 import React from "react";
+
+import { useDispatch } from "react-redux";
 import { Formik, Field, Form } from "formik";
 import s from "./CalorieCalculator.module.css";
 import classnames from 'classnames';
+import {validateWeight, validateHeight, validateSex, validateAge} from "../../helpers/validadions/validations";
+import { CountCalories , setValues} from "../../redux/CalorieCalculator/calorieCalculatorActions";
+
+enum Activity {
+    Active = 'active',
+    Lightly = 'lightly',
+    No = 'no',
+    Very =  'very',
+    Moderately = 'moderately'
+}
 
 
 interface MyFormValues {
-  age: number | null,
-  width: number | null,
-  height: number | null,
-  sex: '',
-  activity: string,
-}
-const regNumber = new RegExp('^[0-9]+$')
-
-function validateAge(age: any) {
-
-  if (!age) {
-
-    return "Required";
-
-  } else if (!regNumber.test(age) || age > 120) {
-
-    return "Invalid name"
-  }
-}
-function validateSex(sex: any) {
-
-  if (sex === '') {
-    return "Required";
-
-  } else if (sex == 'male' && sex == 'female') {
-    return "Invalid name"
-  }
-}
-
-function validateWidth(width: any) {
-  if (!width) {
-    return "Required";
-
-  } else if (!regNumber.test(width) || width > 300) {
-    return "Invalid name"
-  }
-}
-function validateHeight(height: any) {
-  if (!height) {
-
-    return "Required";
-
-  } else if (!regNumber.test(height) || height < 70 || height > 250) {
-
-    return "Invalid name"
-  }
+  age: string,
+  currentWeight: 'pounds' | 'kilos',
+  weight: string,
+  currentHeight: 'feetInches'| 'cm',
+  heightCm: string,
+  heightInches: string,
+  heightFeed: string,
+  sex: 'female'| 'male' ,
+  activity: Activity
 }
 
 
 
 function CalorieCalculator() {
 
-  const initialValues: MyFormValues = { age: null, width: null, height: null, sex: '', activity: '' };
+  const dispatch = useDispatch();
+// const initialValues: MyFormValues | any = { 
+  const initialValues: MyFormValues  = { 
+    age: '',
+    weight: '',
+    currentWeight:  'pounds',
+    currentHeight: 'feetInches',
+    heightCm: '',
+    heightInches: '',
+    heightFeed: '', 
+    sex: 'female', 
+    activity: Activity.Lightly
+  };
+
+  
+  
+  function myfunction(){
+    //console.log(e);
+    console.log('lala')
+
+  }
+ 
+
   return (
     <div >
       Calorie Calculator page
       <Formik
         initialValues={initialValues}
-        onSubmit={(values, { resetForm }) => {
+       
+        onSubmit={(values: MyFormValues, { resetForm }) => {
           console.log(values)
+          dispatch(setValues(values));
+          dispatch<any>(CountCalories(values));
           resetForm({});
         }}
+
+       
+
+        
+
       >
-        {({ errors, touched, values }) => (
+        {({ errors, touched, values, handleChange }) => (
           <Form>
-            <label htmlFor="age">
-              <Field className={classnames(
+            <label htmlFor="age"> age <br />
+              <Field
+              //  onChange={(e: any) => {
+              //      console.log(1)
+              //     handleChange(e);
+              //     //myfunction(e)
+              // }} 
+              className={classnames(
                 s.label, { [s.errorLabel]: errors.age && touched.age }
               )} name="age" id='age' type="text" validate={validateAge} />
+              {errors.age && touched.age ? (
+             <div>{errors.age}</div>
+           ) : null}
             </label>
             <br />
-            <label htmlFor="width">
-              <Field name="width" type="text" className={classnames(
-                s.label, { [s.errorLabel]: errors.width && touched.width })} validate={validateWidth} />
+            <div id="currentWeight-radio-group">Weight</div>
+            <div role="group" aria-labelledby="currentWeight-radio-group">
+              <label >
+                <Field 
+              name="currentWeight" type="radio" value="pounds"   /> Pounds
+              </label>
+              <label >  
+
+                <Field name="currentWeight" type="radio" value="kilos"  
+              //    onChange={(e: any) => {
+              //      console.log(2)
+              //     handleChange(e);
+              //    // myfunction(e)
+              // }} 
+              />Kilos
+              </label>
+            </div>
+
+            <label htmlFor="weight">
+              <Field name="weight" type="text" className={classnames(
+                s.label, { [s.errorLabel]: errors.weight && touched.weight })} validate={validateWeight} />
+
+              {errors.weight && touched.weight ? (
+              <div>{errors.weight}</div>
+            ) : null}
+            </label>
+
+            <div id="currentHeight-radio-group">Height</div>
+            <div role="group" aria-labelledby="currentHeight-radio-group">
+              <label >
+                <Field name="currentHeight" type="radio" value="feetInches"  /> Feet / Inches
+              </label>
+              <label >  
+                <Field name="currentHeight" type="radio" value="cm"   />Cm
+              </label>
+            </div>
+            <br /> height <br />
+            <label htmlFor="heightCm"> cm
+              <Field id='heightCm' name="heightCm" type="text" className={classnames(
+                s.label, { [s.errorLabel]: errors.heightCm && touched.heightCm })} validate={validateHeight} />
             </label>
             <br />
-            <label htmlFor="height">
-              <Field name="height" type="text" className={classnames(
-                s.label, { [s.errorLabel]: errors.height && touched.height })} validate={validateHeight} />
+            <label htmlFor="heightFeed"> Feed
+              <Field name="heightFeed" type="text" />
+            </label>
+            <label htmlFor="heightInches"> Inches
+              <Field name="heightInches" type="text"   />
             </label>
             <br />
 
